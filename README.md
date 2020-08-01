@@ -5,12 +5,9 @@
 2. Maven 
 
 
-**Note: Configure web-driver path and test email address.**
-	
-
 - Configure webdriver.
    
-    Used WebDriverManager
+    Used WebDriverManager dependency inside pom.xml
 
 
 	
@@ -21,13 +18,11 @@ Project is ready to run. Execute following commands and enjoy the automatic web-
 - Run `mvn test`
 
 You can run testng.xml individually to run Test case
-- Run PositiveTestng.xml
-- Run NegativeTestng.xml
+- Run testng.xml
+
 
 You can find the test result in `E2EUserJourney\target\surefire-reports\index.html`.
 
-Note -
-Some time Test case failed when we run parallel both positive and negative test cases that's why i made two individual testng.xml
-that's why I put positivetestng.xml under maven surefire plugin.
-
+**Note** </br>
+I put both positive and Negative TC inside a DashboardTest with priority tag 1 or 2 as well
 Both TC are perfectly running fine.

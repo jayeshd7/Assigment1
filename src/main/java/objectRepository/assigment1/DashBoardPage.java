@@ -71,15 +71,19 @@ public class DashBoardPage {
     public  WebElement creditCardNumber(){
         return CCNumber;
     }
+
     public  WebElement creditCardDate(){
         return CCDate;
     }
+
     public  WebElement creditCardCvv(){
         return CCCvv;
     }
+
     public  WebElement payNowButton(){
         return PayNow;
     }
+
     public WebElement enterPassword(){
         return password;
     }

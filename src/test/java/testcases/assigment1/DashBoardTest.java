@@ -15,9 +15,9 @@ import java.util.concurrent.TimeUnit;
 import static variables.assigment1.UrlVariables.*;
 import static variables.assigment1.UserVariables.*;
 
-public class PositiveDashBoardTest {
+public class DashBoardTest {
     BrowserSetting bs = new BrowserSetting();
-    WebDriver driver = bs.BrowserSettings();
+    WebDriver driver =  bs.BrowserSettings();
     DashBoardPage dashBoardPage = new DashBoardPage(driver);
     WebDriverWait wait = new WebDriverWait(driver, 10);
 
@@ -29,8 +29,8 @@ public class PositiveDashBoardTest {
     }
 
 
-    @Test(groups = "Positive")
-    public void DashBoardTest(){
+    @Test(priority = 1)
+    public void positiveDashBoardTest() throws InterruptedException {
         clickBuynow(driver);
         clickCheckout(driver);
         clickContinueandCheckout(driver);
@@ -38,6 +38,16 @@ public class PositiveDashBoardTest {
         successfullMessage(driver);
 
     }
+
+    @Test(priority = 2)
+    public void negativeDashBoardTest(){
+        clickBuynow(driver);
+        clickCheckout(driver);
+        clickContinueandCheckoutNegativeCase(driver);
+        invalidCardNumber(driver);
+
+    }
+
 
     private void clickBuynow(WebDriver driver) {
         dashBoardPage.buynowButton().click();
@@ -62,10 +72,12 @@ public class PositiveDashBoardTest {
         dashBoardPage.payNowButton().click();
     }
 
-    private void paymentProcessing(WebDriver driver) {
+    private void paymentProcessing(WebDriver driver) throws InterruptedException {
+        Thread.sleep(2000);
+        wait.until((ExpectedConditions.visibilityOfElementLocated(By.xpath("//iframe[contains(@src,'https://api.sandbox.veritrans.co.id/v2/token/rba/redirect/')]"))));
         WebElement paymentFrame = driver.findElement(By.xpath("//iframe[contains(@src,'https://api.sandbox.veritrans.co.id/v2/token/rba/redirect/')]"));
         driver.switchTo().frame(paymentFrame);
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        Thread.sleep(5000);
         wait.until((ExpectedConditions.visibilityOfElementLocated(By.id("PaRes"))));
         dashBoardPage.enterPassword().sendKeys(BANK_OTP);
         dashBoardPage.okButton().click();
@@ -77,6 +89,25 @@ public class PositiveDashBoardTest {
         String actual = dashBoardPage.successMessage().getText();
         Assert.assertEquals("Thank you for your purchase.\n" +
                 "Get a nice sleep.",actual);
+
+    }
+
+
+    private void clickContinueandCheckoutNegativeCase(WebDriver driver) {
+        WebElement fr = driver.findElement(By.id("snap-midtrans"));
+        driver.switchTo().frame(fr);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".button-main-content")));
+        dashBoardPage.continueButton().click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[.='Credit Card']")));
+        dashBoardPage.creditCardPage().click();
+        dashBoardPage.creditCardNumber().sendKeys(InVALID_CARD_NUMBER);
+
+    }
+
+    private void invalidCardNumber(WebDriver driver) {
+
+        WebElement invalidCardNumberMessage = driver.findElement(By.xpath("//span[.='Invalid card number']"));
+        Assert.assertEquals(invalidCardNumberMessage.getText(),"Invalid card number");
 
     }
      @AfterTest
