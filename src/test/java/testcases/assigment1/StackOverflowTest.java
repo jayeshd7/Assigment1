@@ -9,9 +9,7 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static variables.assigment1.UrlVariables.BASE_URL;
 
@@ -33,14 +31,9 @@ public class StackOverflowTest {
     public void StackOverflowDashboard() throws InterruptedException {
         clickSideByToggle(driver);
         clickTagsSection(driver);
+        Thread.sleep(2000);
         clickNameSection(driver);
-        Thread.sleep(5000);
         findAllTagNames(driver);
-
-
-
-        System.out.println("Here End..");
-
     }
 
     private void findAllTagNames(WebDriver driver) {
@@ -49,19 +42,43 @@ public class StackOverflowTest {
         List<WebElement> allTags = driver.findElements(By.className("post-tag"));
 
         for(WebElement tags:allTags){
-            System.out.println(tags.getText());
             WebElement tagsValues = driver.findElement(By.xpath("//a[text()='"+tags.getText()+"']/following::div[@class='grid--cell'][1]"));
             String answertag = tagsValues.getText().replaceAll("[^0-9]","");
-            System.out.println(answertag);
             int ans = Integer.parseInt(answertag.trim());
             hashMap.put(tags.getText(),ans);
         }
 
-        System.out.println(hashMap.size());
-        hashMap.entrySet();
+        LinkedHashMap<String, Integer> hm1 = (LinkedHashMap<String, Integer>) sortByValue(hashMap);
 
 
+        for (Map.Entry<String, Integer> en : hm1.entrySet()) {
+            System.out.println("tags Name = " + en.getKey() +
+                    ", answer count = " + (en.getValue())  );
         }
+
+    }
+
+    private static Map<String, Integer> sortByValue(HashMap<String, Integer> hashMap) {
+        List<Map.Entry<String, Integer> > list =
+                new LinkedList<Map.Entry<String, Integer> >(hashMap.entrySet());
+
+        // Sort the list
+        Collections.sort(list, new Comparator<Map.Entry<String, Integer> >() {
+            public int compare(Map.Entry<String, Integer> o1,
+                               Map.Entry<String, Integer> o2)
+            {
+                return (o1.getValue()).compareTo(o2.getValue());
+            }
+        });
+
+        // put data from sorted list to hashmap
+        LinkedHashMap<String, Integer> temp = new LinkedHashMap<String, Integer>();
+        for (Map.Entry<String, Integer> aa : list) {
+            temp.put(aa.getKey(), aa.getValue());
+        }
+        return temp;
+
+    }
 
 
     private void clickNameSection(WebDriver driver) {
