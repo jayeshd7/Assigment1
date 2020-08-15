@@ -2,7 +2,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Suite" parallel="false" preserve-order="true">
 
-	<test name="Assigment Positive Test" preserve-order="true" parallel="false">
+	<test name="Assigment StackOverflowPositive Test" preserve-order="true" parallel="false">
 		<classes>
 			<class name="testcases.assigment1.StackOverflowTest" />
 		</classes>
